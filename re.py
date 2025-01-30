@@ -1,6 +1,8 @@
 import streamlit as st
-import os
 from openai import OpenAI
+
+# Retrieve API key from Streamlit Secrets
+api_key = st.secrets["OPENAI_API_KEY"]
 
 # Initialize OpenAI Client
 client = OpenAI(api_key=api_key)
@@ -45,9 +47,13 @@ def analyze_brand_and_category(brand, category):
     prompt = PRE_SAVED_PROMPT.replace("{{brand}}", brand).replace("{{category}}", category)
 
     # Call GPT-4 API to process the prompt
-    gpt_response = client.chat.completions.create(model="gpt-4",
-    messages=[{"role": "system", "content": "You are a helpful assistant."},
-              {"role": "user", "content": prompt}])
+    gpt_response = client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt}
+        ]
+    )
 
     # Extract GPT-4's response
     analysis = gpt_response.choices[0].message.content
